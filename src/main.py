@@ -48,7 +48,38 @@ def handle_hello():
     def one_personajes():
         return "solo un personaje"
 
+    @app.route("/capitulos", methods=['GET'])
+    def get_capitulos():
+        return "todos los capitulos"
 
+    @app.route("/capitulos/<int:capitulos_id>", methods=['GET'])
+    def one_capitulos():
+        return "solo un capitulo"
+
+
+    @app.route("/user", methods=['GET'])
+    def get_user():
+        return "todos los usuarios"
+    
+    @app.route("/user/favorites", methods=['GET'])
+    def one_favorites():
+        return "todos favoritos"
+
+    @app.route("/user/favorites/personajes/<int:personajes_id>", methods=['POST'])
+    def get_fav_personajes():
+        return "todos los personajes favoritos"
+
+    @app.route("/user/favorites/capitulos/<int:capitulos_id>", methods=['POST'])
+    def get_fav_capitulos():
+        return "todos los capitulos favoritos"
+
+    @app.route("/user/favorites/personajes/<int:personajes_id>", methods=['DELETE'])
+    def get_fav_personajes():
+        return "todos los personajes favoritos"
+
+    @app.route("/user/favorites/capitulos/<int:capitulos_id>", methods=['DELETE'])
+    def get_fav_capitulos():
+        return "todos los capitulos favoritos"
 
 
 

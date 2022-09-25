@@ -27,8 +27,11 @@ class Personajes(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "personajes": self.personajes,
-            "genero": self.genero,
+            "name": self.name,
+            "status": self.status,
+            "species": self.species,
+            "gender": self.gender,
+            
         }
 
 class Capitulos(db.Model):
@@ -41,7 +44,10 @@ class Capitulos(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "capitulo": self.capitulos,
+            "name": self.name,
+            "air_date": self.air_date,
+            "episode": self.episode,
+    
         }
 
 class Fav_personajes(db.Model):

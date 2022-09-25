@@ -37,7 +37,6 @@ def handle_hello():
     response_body = {
         "msg": "Hello, this is your GET /user response "
     }
-
     return jsonify(serializados), 200
 
     @app.route("/personajes", methods=['GET'])
@@ -72,7 +71,7 @@ def handle_hello():
     def one_favorites():
         return "todos favoritos"
 
-    @app.route("/personajes/favorites/<int:personajes_id>", methods=['POST'])
+    @app.route("/favorites/personajes/<int:personajes_id>", methods=['POST'])
     def add_personajes_fav(personajes_id):
         one = Personajes.query.get(personajes_id) #busqueda solo por el pk
         user = User.query.get(1)
@@ -86,7 +85,7 @@ def handle_hello():
         else:
             raise APIException("no existe el personaje", status_code=404)
 
-    @app.route("/capitulos/favorites/<int:capitulos_id>", methods=['POST'])
+    @app.route("/favorites/capitulos/<int:capitulos_id>", methods=['POST'])
     def add_capituloss_fav(capitulos_id):
             uno = Capitulos.query.get(capitulos_id) #busqueda solo por el pk
             user = User.query.get(1)
@@ -101,7 +100,7 @@ def handle_hello():
                 raise APIException("no existe el capitulo", status_code=404)
 
 
-    @app.route("/personajes/favorites/<int:personajes_id>", methods=['DELETE'])
+    @app.route("/favorites/personajes/<int:personajes_id>", methods=['DELETE'])
     def delete_personajes_fav(personajes_id):
         one = Fav_personajes.query.filter_by(personajes_id=personajes_id).first()
         if(one):
@@ -111,7 +110,7 @@ def handle_hello():
         else:
             raise APIException("no existe el personaje", status_code=404)
 
-    @app.route("/capitulos/favorites/<int:capitulos_id>", methods=['DELETE'])
+    @app.route("/favorites/capitulos/<int:capitulos_id>", methods=['DELETE'])
     def delete_capitulos_fav(capitulos_id):
             uno = Fav_capitulos.query.filter_by(capitulos_id=capitulos_id).first()
             if(uno):

@@ -66,7 +66,7 @@ class Fav_capitulos(db.Model):
     capitulos_id = db.Column(db.Integer, db.ForeignKey('capitulos.id') )
     email =  db.Column(db.String(120), db.ForeignKey('user.email'))
     rel_user = db.relationship('User')
-    rel_pj = db.relationship('Capitulos')
+    rel_cap = db.relationship('Capitulos')
 
     def __repr__(self):
         return '<Fav_capitulos %r>' % self.email

@@ -34,92 +34,95 @@ def sitemap():
 def handle_hello():
     all_user=User.query.all()
     serializados=list(map(lambda user: user.serialize(),all_user))
-    response_body = {
-        "msg": "Hello, this is your GET /user response "
-    }
     return jsonify(serializados), 200
 
-    @app.route("/personajes", methods=['GET'])
-    def get_personajes():
-        all_personajes=Personajes.query.all()
-        print(all_personajes)
-        return "todos los personajes"
-        all_personajes=list(map(lambda personajes:personajes.serialize(), all_personajes))
-        return jsonify(all_personajes)
+@app.route("/personajes", methods=['GET'])
+def get_personajes():
+    all_personajes=Personajes.query.all()
+    all_personajes=list(map(lambda personajes:personajes.serialize(), all_personajes))
+    return jsonify(all_personajes), 200
 
-    @app.route("/personajes/<int:personajes_id>", methods=['GET'])
-    def one_personajes(personajes_id):
-        one=Personajes.query.get(personajes_id)
-        return jsonify(one.serialize())
+@app.route("/personajes/<int:personajes_id>", methods=['GET'])
+def one_personajes(personajes_id):
+    one=Personajes.query.get(personajes_id)
+    return jsonify(one.serialize())
 
-    @app.route("/capitulos", methods=['GET'])
-    def get_capitulos():
-        all_capitulos=Capitulos.query.all()
-        print(all_capitulos)
-        return "todos los capitulos"
-        all_capitulos=list(map(lambda capitulos:capitulos.serialize(), all_capitulos))
-        return jsonify(all_capitulos)
+@app.route("/capitulos", methods=['GET'])
+def get_capitulos():
+    all_capitulos=Capitulos.query.all()
+    all_capitulos=list(map(lambda capitulos:capitulos.serialize(), all_capitulos))
+    return jsonify(all_capitulos), 200
 
-    @app.route("/capitulos/<int:capitulos_id>", methods=['GET'])
-    def one_capitulos(capitulos_id):
-        uno=Capitulos.query.get(capitulos_id)
-        return jsonify(uno.serialize())
+@app.route("/capitulos/<int:capitulos_id>", methods=['GET'])
+def one_capitulos(capitulos_id):
+    uno=Capitulos.query.get(capitulos_id)
+    return jsonify(uno.serialize())
 
+@app.route("/user/favorites", methods=['GET'])
+def get_favorites():
+    usuario=User.query.get(1)
+    correo_usuario= usuario.email
+    fav_cap=Fav_capitulos.query.filter_by(email=correo_usuario)
+    fav_per=Fav_personajes.query.filter_by(email=correo_usuario)
+    serializ=list(map(lambda fav: fav.capitulos_id, fav_cap))
+    all_fav_per=[]
 
-      
-    @app.route("/user/favorites", methods=['GET'])
-    def one_favorites():
-        return "todos favoritos"
+    for ids in serializ:
+        func=Personajes.query.get(ids)
+        all_fav_cap.append(func)
 
-    @app.route("/personajes/favorites/<int:personajes_id>", methods=['POST'])
-    def add_personajes_fav(personajes_id):
-        one = Personajes.query.get(personajes_id) #busqueda solo por el pk
-        user = User.query.get(1)
-        if(one):
-            new_fav = Fav_personajes()
-            new_fav.email = user.email
-            new_fav.personajes_id = personajes_id
-            db.session.add(new_fav)
-            db.session.commit()
-            return "Hecho!"
-        else:
-            raise APIException("no existe el personaje", status_code=404)
+    fav_all=[*all_fav_per, *fav_cap]
+    fav_all=list(map(lambda fav: fav.serialize(), fav_all))
+    return jsonify(fav_all), 200
 
-    @app.route("/capitulos/favorites/<int:capitulos_id>", methods=['POST'])
-    def add_capituloss_fav(capitulos_id):
-            uno = Capitulos.query.get(capitulos_id) #busqueda solo por el pk
-            user = User.query.get(1)
-            if(uno):
-                new_fav = Fav_capitulos()
-                new_fav.email = user.email
-                new_fav.capitulos_id = capitulos_id
-                db.session.add(new_fav)
-                db.session.commit()
-                return "Hecho!"
-            else:
-                raise APIException("no existe el capitulo", status_code=404)
+    
+@app.route("/personajes/favorites/<int:personajes_id>", methods=['POST'])
+def add_personajes_fav(personajes_id):
+    one = Personajes.query.get(personajes_id) #busqueda solo por el pk
+    user = User.query.get(1)
+    if(one):
+        new_fav = Fav_personajes()
+        new_fav.email = user.email
+        new_fav.personajes_id = personajes_id
+        db.session.add(new_fav)
+        db.session.commit()
+        return "Hecho!"
+    else:
+        raise APIException("no existe el personaje", status_code=404)
 
+@app.route("/capitulos/favorites/<int:capitulos_id>", methods=['POST'])
+def add_capitulos_fav(capitulos_id):
+    uno = Capitulos.query.get(capitulos_id) #busqueda solo por el pk
+    user = User.query.get(1)
+    if(uno):
+        new_fav = Fav_capitulos()
+        new_fav.email = user.email
+        new_fav.capitulos_id = capitulos_id
+        db.session.add(new_fav)
+        db.session.commit()
+        return "Hecho!"
+    else:
+        raise APIException("no existe el capitulo", status_code=404)
 
-    @app.route("/personajes/favorites/<int:personajes_id>", methods=['DELETE'])
-    def delete_personajes_fav(personajes_id):
-        one = Fav_personajes.query.filter_by(personajes_id=personajes_id).first()
-        if(one):
-            db.session.delete(one)
-            db.session.commit()
-            return "eliminado"
-        else:
-            raise APIException("no existe el personaje", status_code=404)
+@app.route("/personajes/favorites/<int:personajes_id>", methods=['DELETE'])
+def delete_personajes_fav(personajes_id):
+    one = Fav_personajes.query.filter_by(personajes_id=personajes_id).first()
+    if(one):
+        db.session.delete(one)
+        db.session.commit()
+        return "eliminado"
+    else:
+        raise APIException("no existe el personaje", status_code=404)
 
-    @app.route("/capitulos/favorites/<int:capitulos_id>", methods=['DELETE'])
-    def delete_capitulos_fav(capitulos_id):
-            uno = Fav_capitulos.query.filter_by(capitulos_id=capitulos_id).first()
-            if(uno):
-                db.session.delete(uno)
-                db.session.commit()
-                return "eliminado"
-            else:
-                raise APIException("no existe el capitulo", status_code=404)
-
+@app.route("/capitulos/favorites/<int:capitulos_id>", methods=['DELETE'])
+def delete_capitulos_fav(capitulos_id):
+    uno = Fav_capitulos.query.filter_by(capitulos_id=capitulos_id).first()
+    if(uno):
+        db.session.delete(uno)
+        db.session.commit()
+        return "eliminado"
+    else:
+        raise APIException("no existe el capitulo", status_code=404)
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':

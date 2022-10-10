@@ -27,27 +27,20 @@ class Personajes(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "name": self.name,
-            "status": self.status,
-            "species": self.species,
-            "gender": self.gender,
-            
+            "personajes": self.personajes,            
         }
 
 class Capitulos(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     capitulos = db.Column(db.String(30), unique=False, nullable=False)
-    
+
     def __repr__(self):
         return '<Capitulos %r>' % self.capitulos
 
     def serialize(self):
         return {
             "id": self.id,
-            "name": self.name,
-            "air_date": self.air_date,
-            "episode": self.episode,
-    
+            "capitulos": self.capitulos,
         }
 
 class Fav_personajes(db.Model):
